@@ -1,0 +1,5 @@
+beautifulsoup4
+html2text
+python-dotenv
+google-cloud-storage
+litellm

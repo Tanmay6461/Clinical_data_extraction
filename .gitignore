@@ -1,0 +1,10 @@
+test.py
+test.ipynb
+test_edgar.py
+sec_data
+sec_filings
+clinical-data-keys.json
+.env
+.venv
+__pycache__
+ef.py
