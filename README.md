@@ -1,9 +1,6 @@
 # 🧬 SEC Drug Pipeline
 This project automates the extraction, canonicalization, and summarization of drug development pipelines from SEC filings using LLMs and cloud infrastructure.
 
-### use WVE or ALNY for demo since this data is already stored.(Due to limited credits)
-- API - https://fastapi-clinical-data-982882644329.us-central1.run.app/docs#/default/summarize_filing_summary__ticker__get
-- UI - https://clinical-data.streamlit.app/
 
 ## 📌 Overview
 
