@@ -1,0 +1,12 @@
+beautifulsoup4
+html2text
+python-dotenv
+google-cloud-storage
+litellm
+fastapi
+apache-airflow
+google-cloud-aiplatform
+google-generativeai
+openai
+uvicorn[standard]
+google-cloud-secret-manager>=2.16.0

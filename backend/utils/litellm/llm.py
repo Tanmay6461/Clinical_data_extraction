@@ -25,3 +25,28 @@ def llm(model, prompt):
             'completion_tokens' : response.usage.completion_tokens,
             'created' : datetime.fromtimestamp(response.created).strftime('%Y-%m-%d %H:%M:%S')
             }
+
+
+
+def llmGpt(model, prompt, client):
+    # openai.api_key = Variable.get("OPENAI_API_KEY")
+    if isinstance(prompt, StringIO):
+        prompt = prompt.getvalue()
+    try:
+        response = client.chat.completions.create(
+            model=model,
+            messages=[{"role": "user", "content": prompt}],
+            temperature=0.7,
+        )
+    except Exception as e:
+        print(f"OpenAI API call failed: {e}")
+        return None
+
+    return {
+        'id': response.id,
+        'response': response.choices[0].message.content,
+        'model': response.model,
+        'prompt_tokens': response.usage.prompt_tokens,
+        'completion_tokens': response.usage.completion_tokens,
+        'created': datetime.fromtimestamp(response.created).strftime('%Y-%m-%d %H:%M:%S')
+    }

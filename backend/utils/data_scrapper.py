@@ -6,12 +6,16 @@ import os
 import re
 from bs4 import BeautifulSoup
 import json
-from backend.gcp.cloud_storage import upload_file
+from gcp.cloud_storage import upload_file, read_json_from_gcs, write_json_to_gcs
 from io import BytesIO, StringIO
 from google.oauth2 import service_account
-from backend.utils.litellm.helper import prompt_get_drug_names
-from backend.utils.litellm.llm import llm
-import ast
+from utils.litellm.helper import prompt_get_drug_names, prompt_group_drug_names, final_drug_info_schema, prompt_summarize_drug_data
+from utils.litellm.llm import llm
+from collections import defaultdict
+from concurrent.futures import ThreadPoolExecutor, as_completed
+from jsonschema import validate, ValidationError
+import shutil
+
 
 class SECFilingExtractor:
     """Class to download and extract content from SEC filings."""
@@ -21,7 +25,7 @@ class SECFilingExtractor:
     SUBMISSIONS_ENDPOINT = "/submissions/CIK{}.json"
     BUCKET_NAME = os.getenv('GCP_BUCKET_NAME')
 
-    
+
     def __init__(self, ticker, email, output_dir="sec_extracts"):
         """Initialize the extractor with a ticker symbol."""
         self.ticker = ticker.upper()
@@ -184,13 +188,7 @@ class SECFilingExtractor:
         Returns:
             bool: True if processing was successful, False otherwise
         """
-        
-        # cred_path = os.getenv('GOOGLE_APPLICATION_CREDENTIALS')
-        # credentials = service_account.Credentials.from_service_account_file(cred_path)
-      
-        drug_names = set()
-
-
+        os.environ["LITELLM_VERBOSE"] = "False"
         if not self.credentials:
             print("Error: GCP credentials are required for direct GCS upload")
             return False
@@ -240,7 +238,7 @@ class SECFilingExtractor:
                 content.write(item_content)
                 content.write("\n\n" + "=" * 80 + "\n\n")
         else:
-            # 10-K/10-Q: Write each section with a clear header
+            # 10-K/10-Q: section with a clear header
             for section_name, section_text in sections.items():
                 content.write("\n" + "=" * 80 + "\n")
                 content.write(f"{section_name}\n")
@@ -250,27 +248,37 @@ class SECFilingExtractor:
 
 
         formatted_prompt =  prompt_get_drug_names.format(
-        # form_type=form_type,
         ticker=self.ticker,
         content=content.getvalue()
         )
 
 
-        llm_reponse = llm(
-            model="vertex_ai/gemini-2.0-flash-001",
+        # drug_facts = {} 
+        llm_response = llm(
+            model="vertex_ai/gemini-2.5-pro-preview-05-06",
+            # model="vertex_ai/gemini-2.5-flash-preview-04-17",
             prompt=formatted_prompt, 
-            # response_format= {}
         )   
 
-        response_content = llm_reponse['response']
-        try:
-            drugs = ast.literal_eval(response_content.strip())
-            for drug in drugs:
-                drug_names.add(drug)
-        except Exception as e:
-            print(f"Could not parse drug names: {e}")
+        raw_response = llm_response['response'].strip()
         
-        drug_list = list(drug_names)
+        if not raw_response:
+            print(f"Empty LLM response for {filing['form']} - skipping.")
+            return None
+        
+        # print('raw', raw_response)
+
+        if raw_response.startswith("```json"):
+            raw_response = raw_response.removeprefix("```json").removesuffix("```").strip()
+        elif raw_response.startswith("```"):
+            raw_response = raw_response.removeprefix("```").removesuffix("```").strip()
+
+        try:
+            parsed_response = json.loads(raw_response)
+        except json.JSONDecodeError as e:
+            print(f"Could not parse LLM JSON: {e}")
+         
+            return None
 
         # Upload to GCS
         try:
@@ -278,14 +286,14 @@ class SECFilingExtractor:
             content_bytes = BytesIO(content.getvalue().encode('utf-8'))
             content.close()
             
-            upload_result = upload_file(
+            upload_response = upload_file(
                 file_data=content_bytes,
                 filename=gcs_filename,
                 content_type='text/plain',
                 credentials=self.credentials
             )
             
-            if True: #upload_result == 1:
+            if  upload_response == 1:
                 gcs_url = f"gs://{self.BUCKET_NAME}/{gcs_filename}"
                 print(f"Uploaded {form_type} filing to GCS: {gcs_url}")
                 
@@ -304,12 +312,15 @@ class SECFilingExtractor:
                     self.extracted_10k.append(filing_info)
                 elif form_type == '10-Q':
                     self.extracted_10q.append(filing_info)
-                
-                return drug_list
-            # else:
-            #     print(f"Failed to upload {form_type} filing to GCS: {gcs_filename}")
-            #     return False
-                
+                else:
+                    print(f"Unknown form type {form_type} - not saving.")   
+            else :
+                print(f"Failed to upload {form_type} filing to GCS: {gcs_filename}")
+                return False    
+            
+            self.save_structured_metadata()
+            return parsed_response
+
         except Exception as e:
             print(f"Error uploading to GCS: {e}")
             return False
@@ -355,17 +366,10 @@ class SECFilingExtractor:
         
         return items
     
-    
     def extract_filing_sections(self, text, form_type='10-K'):
         """
         Generic function to extract sections from SEC filings (10-K, 10-Q).
-        
-        Args:
-            text (str): The full text of the SEC filing
-            form_type (str): The type of form ('10-K' or '10-Q')
-            
-        Returns:
-            dict: A dictionary of section names and their contents
+    
         """
         
         # Define section patterns based on form type
@@ -451,7 +455,7 @@ class SECFilingExtractor:
         
         return sections
     
-    def save_structured_data(self):
+    def save_structured_metadata(self):
         """Save structured data of all extracted filings to JSON."""
         try:
             index_data= {
@@ -479,7 +483,6 @@ class SECFilingExtractor:
                 content_type='application/json',
                 credentials= self.credentials
             )
-
             return {
                 "status_code": 200,
                 "message":"Combined index file stored to GCS" 
@@ -487,84 +490,241 @@ class SECFilingExtractor:
         
         except Exception as e:
                 return f"Error processing filings: {str(e)}"
-         
+        
+    def merge_all_drug_data(self, drug_facts_path, alias_groups):
+        """
+        Merge drug data based on alias groups to consolidate information.
 
-    def process_all_filings(self, form_types=("8-K", "10-K", "10-Q")):
-        """Process all filings of the specified types."""
+        """
         try:
-                # Get list of filings
-                filings = self.get_filings(form_types)
+            # Load original drug facts
+            with open(drug_facts_path, "r", encoding="utf-8") as f:
+                drug_facts_data = json.load(f)
+            
+            # Create alias to canonical name mapping in one pass
+            alias_to_main = {}
+            canonical_aliases = {}
+            
+            for group in alias_groups:
+                canonical = group["name"]
+                aliases = set(alias.strip().lower() for alias in group.get("aliases", []))
                 
-                if not filings:
-                    print(f"No filings found for {self.ticker}")
-                    return
+                # Store original aliases for later (avoid re-processing)
+                canonical_aliases[canonical] = sorted(group.get("aliases", []))
                 
-                print(f"Processing {len(filings)} filings...")
-
-                unique_drugs = set()
+                # Add self-mapping
+                alias_to_main[canonical.strip().lower()] = canonical
                 
-                # Process each filing based on its type
-                for filing in filings:
-                    form_type = filing["form"]
+                # Add all aliasesd =
+                for alias in aliases:
+                    alias_to_main[alias] = canonical
+            
+            # Process drug data - use direct dictionary manipulation instead of defaultdict
+            merged_data = {}
+            drugs_section = drug_facts_data.get("drugs", {})
+            
+            for drug_name, facts in drugs_section.items():
+                # Get canonical name, defaulting to original if no match
+                drug_key = drug_name.strip().lower()
+                canonical = alias_to_main.get(drug_key, drug_name)
+                
+                # Initialize dictionary for this canonical drug if needed
+                if canonical not in merged_data:
+                    merged_data[canonical] = {}
+                
+                # Merge all facts
+                for field, value in facts.items():
+                    if field not in merged_data[canonical]:
+                        # Initialize the field with an empty set
+                        merged_data[canonical][field] = set()
                     
-                    if form_type == "8-K":
-                        data = self.process_filing(filing, '8-K')
-                    elif form_type == "10-K":
-                        data = self.process_filing(filing, '10-K')
-                    elif form_type == "10-Q":
-                        data = self.process_filing(filing, '10-Q')
-                    
-
-                    if data:
-                        for drug in data:
-                            unique_drugs.add(drug)
-                    
-                drugs_json = {"drugs": sorted(list(unique_drugs))}
-                json_str = json.dumps(drugs_json, indent=2)
-                file_data = BytesIO(json_str.encode('utf-8'))
-                gcs_filename =  f"{self.ticker}/{self.ticker}_drug_names.json"
-
-
-                store_drug_name = upload_file(
-                    file_data=file_data,
-                    filename=gcs_filename,
-                    content_type='application/json', 
-                    credentials=self.credentials
-                )
-
-                self.save_structured_data()
-
-                if store_drug_name == 1:
-                    return {
-                        "status_code": 200,
-                        "message":f"Successfully uploaded drug names for {self.ticker}"
-                    }
-                else:
-                    return {
-                        "status_code": 200,
-                        "message":f"Failed to upload drug names for {self.ticker}"
-                    }
+                    # Add values depending on type
+                    if isinstance(value, list):
+                        merged_data[canonical][field].update(value)
+                    elif isinstance(value, str):
+                        merged_data[canonical][field].add(value)
+            
+            # Build final output with sorted lists
+            final_output = {"drugs": {}}
+            
+            for drug, data in merged_data.items():
+                final_output["drugs"][drug] = {
+                    field: sorted(list(values)) for field, values in data.items()
+                }
+                
+                # Add aliases if this is a canonical drug
+                if drug in canonical_aliases:
+                    final_output["drugs"][drug]["aliases"] = canonical_aliases[drug]
+            
+            return final_output
         except Exception as e:
-            print(f"Error processing filings: {str(e)}")
+            print(f"Error merging drug data: {e}")
+            return None
+
+    def group_and_merge_drug_aliases(self, partial_path: str) -> dict:
+        with open(partial_path, "r") as f:
+            data = json.load(f)
+        print(f"[Alias Merge] Loaded {len(data.get('drugs', {}))} drugs from partial data.")
+        drugs_info = []
+        for drug_name, drug_data in data.get("drugs", {}).items():
+            aliases = drug_data.get("aliases", [])
+            drugs_info.append({
+                "name": drug_name,
+                "aliases": aliases
+            })
+
+        drugs_info_json = json.dumps(drugs_info, indent=2)
+        formatted_prompt = prompt_group_drug_names.format(content=drugs_info_json)
+
+        response = llm(model="vertex_ai/gemini-2.5-flash-preview-04-17", prompt=formatted_prompt)
+        raw_response = response["response"].strip()
+
+        if raw_response.startswith("```json"):
+            raw_response = raw_response.removeprefix("```json").removesuffix("```").strip()
+        elif raw_response.startswith("```"):
+            raw_response = raw_response.removeprefix("```").removesuffix("```").strip()
+
+        try:
+            canonical_mapping = json.loads(raw_response)
+        except json.JSONDecodeError as e:
+            print(f"[Alias Merge] Failed to parse LLM response: {e}")
+            raise
+
+        final_merge = self.merge_all_drug_data(partial_path, canonical_mapping)
+        return final_merge
+
+    def process_all_filings(self, form_types=("8-K", "10-K", "10-Q"), max_workers=35, override_filings=None):
+        try:
+            if override_filings:
+                filings = override_filings
+            else:
+                filings = self.get_filings(form_types)
+
+            print(f"Processing {len(filings)} filings...")
+
+            # Resume from partial
+            partial_path = os.path.join(self.output_dir, f"{self.ticker}_drug_facts_partial.json")
+            drug_facts = defaultdict(lambda: defaultdict(set))
+
+            if os.path.exists(partial_path):
+                with open(partial_path, "r") as f:
+                    raw_data = json.load(f)
+                for drug, fact_map in raw_data.get("drugs", {}).items():
+                    for fact_type, values in fact_map.items():
+                        if isinstance(values, list):
+                            drug_facts[drug][fact_type].update(values)
+
+            # Internal helper to process one filing
+            def handle_filing(filing):
+                try:
+                    form_type = filing["form"]
+                    data = self.process_filing(filing, form_type)
+                    return filing, data
+                except Exception as e:
+                    return filing, None
+
+            # Threaded execution
+            with ThreadPoolExecutor(max_workers=max_workers) as executor:
+                futures = [executor.submit(handle_filing, filing) for filing in filings]
+                # futures = [executor.submit(handle_filing, filings[0])]
+
+                for i, future in enumerate(as_completed(futures), 1):
+                    filing, data = future.result()
+                    print(f"Finished {i}/{len(filings)}: {filing['accessionNumber']}")
+
+                    if data and "programs" in data:
+                        for program in data["programs"]:
+                            if not isinstance(program, dict):
+                                continue
+                            drug_name = program.get("name", "UNKNOWN").strip("'\" ")
+                            if not drug_name:
+                                continue
+                            for fact_type, fact_value in program.items():
+                                if fact_type == "name":
+                                    continue
+                                if isinstance(fact_value, list):
+                                    clean = [v for v in fact_value if isinstance(v, str)]
+                                    drug_facts[drug_name][fact_type].update(clean)
+                                elif isinstance(fact_value, str) and fact_value.strip():
+                                    drug_facts[drug_name][fact_type].add(fact_value)
+
+                    # Save intermediate
+                    tmp_result = {
+                        "drugs": {
+                            drug: {
+                                fact_type: sorted(list(fact_set))
+                                for fact_type, fact_set in fact_types.items()
+                            }
+                            for drug, fact_types in drug_facts.items()
+                        }
+                    }
+
+                    with open(partial_path, "w") as f:
+                        json.dump(tmp_result, f, indent=2)
+           
+            final_merge = self.group_and_merge_drug_aliases(partial_path)
+            json_str = json.dumps(final_merge, indent=2)
+            file_data = BytesIO(json_str.encode("utf-8"))
+            gcs_filename = f"{self.ticker}/{self.ticker}_drug_facts.json"
+
+
+            #validating output schema 
+            try:
+                validate(instance=final_merge, schema=final_drug_info_schema)
+                print("Schema validation passed.")
+            except ValidationError as ve:
+                raise ValueError(f"Schema validation failed: {ve.message}")
+            
+
+            store_drug_name = upload_file(
+                file_data=file_data,
+                filename=gcs_filename,
+                content_type="application/json",
+                credentials=self.credentials
+            )
+
+            # self.save_structured_metadata()
+
+            if os.path.exists(partial_path):
+                os.remove(partial_path)
+
+            return {
+                "status_code": 200,
+                "message": "Upload successful" if store_drug_name == 1 else "Upload failed"
+            }
+
+        except Exception as e:
+            print(f"Error processing filings: {e}")
             return False
 
+    def process_new_filings_only(self, form_types=("8-K", "10-K", "10-Q"), max_workers=35, state_path=None):
+        # GCS-based state file path
+        state_blob_path = f"{self.ticker}/track_{self.ticker}_filings.json"
 
-def main():
-    """Main function to run the script."""
-    parser = argparse.ArgumentParser(description="Extract content from SEC filings (8-K, 10-K, 10-Q).")
-    parser.add_argument("ticker", help="Stock ticker symbol (e.g., WVE, DRNA, ALNY)")
-    # parser.add_argument("email", help="Your email for SEC API access")
-    parser.add_argument("--form-types", nargs="+", default=["8-K", "10-K", "10-Q"], 
-                      help="Form types to process (default: 8-K, 10-K, 10-Q)")
-    parser.add_argument("--output-dir", default="sec_extracts", 
-                      help="Directory to save extracted content (default: sec_extracts)")
-    
-    args = parser.parse_args()
-    
-    print(f"Extracting {', '.join(args.form_types)} filings for {args.ticker}...")
-    
-    extractor = SECFilingExtractor(args.ticker, "thgfg@gmail.com", f"sec_data/{args.ticker}")
-    extractor.process_all_filings(args.form_types)
+        # Step 1: Read processed accession numbers from GCS
+        try:
+            processed = read_json_from_gcs(self.BUCKET_NAME, state_blob_path, self.credentials)
+        except Exception as e:
+            print(f"Failed to read processed accessions: {e}")
+            processed = set()
 
-if __name__ == "__main__":
-    main()
+        all_filings = self.get_filings(form_types=form_types)
+        new_filings = [f for f in all_filings if f["accessionNumber"] not in processed]
+        if not new_filings:
+            print("No new filings to process.")
+            return
+        
+        print(f"Found {len(new_filings)} new filings.")
+        self.process_all_filings(form_types=form_types, max_workers=max_workers, override_filings=new_filings)
+
+        try:
+            new_processed = processed.union(f["accessionNumber"] for f in new_filings)
+            write_json_to_gcs(self.BUCKET_NAME, state_blob_path, new_processed, self.credentials)
+            print("Updated processed accessions in GCS.")
+        except Exception as e:
+            print(f"Failed to update processed accessions in GCS: {e}")
+        
+        if os.path.exists(self.output_dir):
+            shutil.rmtree(self.output_dir)
+            print(f"Deleted output_dir: {self.output_dir}")
+            
