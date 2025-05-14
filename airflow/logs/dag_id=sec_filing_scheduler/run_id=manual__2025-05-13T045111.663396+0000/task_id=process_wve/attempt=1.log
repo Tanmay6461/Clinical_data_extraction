@@ -1,0 +1,90 @@
+[2025-05-13T04:51:29.350+0000] {local_task_job_runner.py:123} INFO - ::group::Pre task execution logs
+[2025-05-13T04:51:29.376+0000] {taskinstance.py:2613} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: sec_filing_scheduler.process_wve manual__2025-05-13T04:51:11.663396+00:00 [queued]>
+[2025-05-13T04:51:29.391+0000] {taskinstance.py:2613} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: sec_filing_scheduler.process_wve manual__2025-05-13T04:51:11.663396+00:00 [queued]>
+[2025-05-13T04:51:29.392+0000] {taskinstance.py:2866} INFO - Starting attempt 1 of 1
+[2025-05-13T04:51:29.418+0000] {taskinstance.py:2889} INFO - Executing <Task(PythonOperator): process_wve> on 2025-05-13 04:51:11.663396+00:00
+[2025-05-13T04:51:29.438+0000] {warnings.py:112} WARNING - /home/***/.local/lib/python3.12/site-packages/***/task/task_runner/standard_task_runner.py:70: DeprecationWarning: This process (pid=305) is multi-threaded, use of fork() may lead to deadlocks in the child.
+  pid = os.fork()
+
+[2025-05-13T04:51:29.440+0000] {standard_task_runner.py:72} INFO - Started process 315 to run task
+[2025-05-13T04:51:29.449+0000] {standard_task_runner.py:104} INFO - Running: ['***', 'tasks', 'run', 'sec_filing_scheduler', 'process_wve', 'manual__2025-05-13T04:51:11.663396+00:00', '--job-id', '5', '--raw', '--subdir', 'DAGS_FOLDER/orchestrate_clinical_pipeline.py', '--cfg-path', '/tmp/tmp9fru5cu7']
+[2025-05-13T04:51:29.452+0000] {standard_task_runner.py:105} INFO - Job 5: Subtask process_wve
+[2025-05-13T04:51:29.557+0000] {task_command.py:467} INFO - Running <TaskInstance: sec_filing_scheduler.process_wve manual__2025-05-13T04:51:11.663396+00:00 [running]> on host a05bfec3be05
+[2025-05-13T04:51:29.701+0000] {taskinstance.py:3132} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='***' AIRFLOW_CTX_DAG_ID='sec_filing_scheduler' AIRFLOW_CTX_TASK_ID='process_wve' AIRFLOW_CTX_EXECUTION_DATE='2025-05-13T04:51:11.663396+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='manual__2025-05-13T04:51:11.663396+00:00'
+[2025-05-13T04:51:29.703+0000] {taskinstance.py:731} INFO - ::endgroup::
+[2025-05-13T04:51:29.719+0000] {connection.py:277} WARNING - Connection schemes (type: google_cloud_platform) shall not contain '_' according to RFC3986.
+[2025-05-13T04:51:29.721+0000] {base.py:84} INFO - Retrieving connection 'google_cloud_default'
+[2025-05-13T04:51:30.084+0000] {logging_mixin.py:190} INFO - Failed to read processed accessions: 403 GET https://storage.googleapis.com/storage/v1/b/clinical_data_may06/o/WVE%2Ftrack_WVE_filings.json?fields=name&prettyPrint=false: 982882644329-compute@developer.gserviceaccount.com does not have storage.objects.get access to the Google Cloud Storage object. Permission 'storage.objects.get' denied on resource (or it may not exist).
+[2025-05-13T04:51:31.227+0000] {logging_mixin.py:190} INFO - Found 135 8-K filings
+[2025-05-13T04:51:31.227+0000] {logging_mixin.py:190} INFO - Found 10 10-K filings
+[2025-05-13T04:51:31.228+0000] {logging_mixin.py:190} INFO - Found 29 10-Q filings
+[2025-05-13T04:51:31.230+0000] {logging_mixin.py:190} INFO - Found 174 new filings.
+[2025-05-13T04:51:31.231+0000] {logging_mixin.py:190} INFO - Processing 1 filings...
+[2025-05-13T04:51:35.665+0000] {log.py:232} WARNING - [92m04:51:35 - LiteLLM:INFO[0m: utils.py:2870 - 
+LiteLLM completion() model= gemini-2.5-pro-preview-05-06; provider = vertex_ai
+[2025-05-13T04:51:35.665+0000] {utils.py:2870} INFO - 
+LiteLLM completion() model= gemini-2.5-pro-preview-05-06; provider = vertex_ai
+[2025-05-13T04:51:35.674+0000] {log.py:232} WARNING - [92m04:51:35 - LiteLLM:ERROR[0m: vertex_llm_base.py:290 - Failed to load vertex credentials. Check to see if credentials containing partial/invalid information.
+Traceback (most recent call last):
+  File "/home/***/.local/lib/python3.12/site-packages/litellm/llms/vertex_ai/vertex_llm_base.py", line 286, in get_access_token
+    _credentials, credential_project_id = self.load_auth(
+                                          ^^^^^^^^^^^^^^^
+  File "/home/***/.local/lib/python3.12/site-packages/litellm/llms/vertex_ai/vertex_llm_base.py", line 95, in load_auth
+    creds, creds_project_id = google_auth.default(
+                              ^^^^^^^^^^^^^^^^^^^^
+  File "/home/***/.local/lib/python3.12/site-packages/google/auth/_default.py", line 663, in default
+    credentials, project_id = checker()
+                              ^^^^^^^^^
+  File "/home/***/.local/lib/python3.12/site-packages/google/auth/_default.py", line 656, in <lambda>
+    lambda: _get_explicit_environ_credentials(quota_project_id=quota_project_id),
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/***/.local/lib/python3.12/site-packages/google/auth/_default.py", line 271, in _get_explicit_environ_credentials
+    credentials, project_id = load_credentials_from_file(
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/***/.local/lib/python3.12/site-packages/google/auth/_default.py", line 114, in load_credentials_from_file
+    raise exceptions.DefaultCredentialsError(
+google.auth.exceptions.DefaultCredentialsError: File D:\Kcap\backend\gcp\clinical-data-keys.json was not found.
+[2025-05-13T04:51:35.668+0000] {vertex_llm_base.py:290} ERROR - Failed to load vertex credentials. Check to see if credentials containing partial/invalid information.
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.12/site-packages/litellm/llms/vertex_ai/vertex_llm_base.py", line 286, in get_access_token
+    _credentials, credential_project_id = self.load_auth(
+                                          ^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/litellm/llms/vertex_ai/vertex_llm_base.py", line 95, in load_auth
+    creds, creds_project_id = google_auth.default(
+                              ^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/google/auth/_default.py", line 663, in default
+    credentials, project_id = checker()
+                              ^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/google/auth/_default.py", line 656, in <lambda>
+    lambda: _get_explicit_environ_credentials(quota_project_id=quota_project_id),
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/google/auth/_default.py", line 271, in _get_explicit_environ_credentials
+    credentials, project_id = load_credentials_from_file(
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/google/auth/_default.py", line 114, in load_credentials_from_file
+    raise exceptions.DefaultCredentialsError(
+google.auth.exceptions.DefaultCredentialsError: File D:\Kcap\backend\gcp\clinical-data-keys.json was not found.
+[2025-05-13T04:51:35.676+0000] {logging_mixin.py:190} INFO - Give Feedback / Get Help: https://github.com/BerriAI/litellm/issues/new
+[2025-05-13T04:51:35.677+0000] {logging_mixin.py:190} INFO - LiteLLM.Info: If you need to debug this error, use `litellm._turn_on_debug()'.
+[2025-05-13T04:51:35.756+0000] {logging_mixin.py:190} INFO - Finished 1/1: 0000950170-25-066404
+[2025-05-13T04:51:35.757+0000] {logging_mixin.py:190} INFO - Error processing filings: [Errno 2] No such file or directory: 'sec_data/WVE/WVE_drug_facts_partial.json'
+[2025-05-13T04:51:36.044+0000] {logging_mixin.py:190} INFO - Failed to update processed accessions in GCS: 403 POST https://storage.googleapis.com/upload/storage/v1/b/clinical_data_may06/o?uploadType=multipart: {
+  "error": {
+    "code": 403,
+    "message": "982882644329-compute@developer.gserviceaccount.com does not have storage.objects.create access to the Google Cloud Storage object. Permission 'storage.objects.create' denied on resource (or it may not exist).",
+    "errors": [
+      {
+        "message": "982882644329-compute@developer.gserviceaccount.com does not have storage.objects.create access to the Google Cloud Storage object. Permission 'storage.objects.create' denied on resource (or it may not exist).",
+        "domain": "global",
+        "reason": "forbidden"
+      }
+    ]
+  }
+}
+: ('Request failed with status code', 403, 'Expected one of', <HTTPStatus.OK: 200>)
+[2025-05-13T04:51:36.046+0000] {python.py:240} INFO - Done. Returned value was: None
+[2025-05-13T04:51:36.103+0000] {taskinstance.py:340} INFO - ::group::Post task execution logs
+[2025-05-13T04:51:36.106+0000] {taskinstance.py:352} INFO - Marking task as SUCCESS. dag_id=sec_filing_scheduler, task_id=process_wve, run_id=manual__2025-05-13T04:51:11.663396+00:00, execution_date=20250513T045111, start_date=20250513T045129, end_date=20250513T045136
+[2025-05-13T04:51:36.326+0000] {local_task_job_runner.py:266} INFO - Task exited with return code 0
+[2025-05-13T04:51:36.371+0000] {taskinstance.py:3895} INFO - 0 downstream tasks scheduled from follow-on schedule check
+[2025-05-13T04:51:36.385+0000] {local_task_job_runner.py:245} INFO - ::endgroup::

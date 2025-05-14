@@ -1,0 +1,42 @@
+[2025-05-13T15:55:45.774+0000] {local_task_job_runner.py:123} INFO - ::group::Pre task execution logs
+[2025-05-13T15:55:45.789+0000] {taskinstance.py:2613} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: sec_filing_scheduler.process_alny manual__2025-05-13T15:55:35.127136+00:00 [queued]>
+[2025-05-13T15:55:45.797+0000] {taskinstance.py:2613} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: sec_filing_scheduler.process_alny manual__2025-05-13T15:55:35.127136+00:00 [queued]>
+[2025-05-13T15:55:45.797+0000] {taskinstance.py:2866} INFO - Starting attempt 1 of 1
+[2025-05-13T15:55:45.810+0000] {taskinstance.py:2889} INFO - Executing <Task(PythonOperator): process_alny> on 2025-05-13 15:55:35.127136+00:00
+[2025-05-13T15:55:45.821+0000] {warnings.py:112} WARNING - /home/***/.local/lib/python3.12/site-packages/***/task/task_runner/standard_task_runner.py:70: DeprecationWarning: This process (pid=176) is multi-threaded, use of fork() may lead to deadlocks in the child.
+  pid = os.fork()
+
+[2025-05-13T15:55:45.823+0000] {standard_task_runner.py:72} INFO - Started process 177 to run task
+[2025-05-13T15:55:45.828+0000] {standard_task_runner.py:104} INFO - Running: ['***', 'tasks', 'run', 'sec_filing_scheduler', 'process_alny', 'manual__2025-05-13T15:55:35.127136+00:00', '--job-id', '94', '--raw', '--subdir', 'DAGS_FOLDER/orchestrate_clinical_pipeline.py', '--cfg-path', '/tmp/tmp416kwbzo']
+[2025-05-13T15:55:45.834+0000] {standard_task_runner.py:105} INFO - Job 94: Subtask process_alny
+[2025-05-13T15:55:45.920+0000] {task_command.py:467} INFO - Running <TaskInstance: sec_filing_scheduler.process_alny manual__2025-05-13T15:55:35.127136+00:00 [running]> on host c1a7243cf3b7
+[2025-05-13T15:55:46.054+0000] {taskinstance.py:3132} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='***' AIRFLOW_CTX_DAG_ID='sec_filing_scheduler' AIRFLOW_CTX_TASK_ID='process_alny' AIRFLOW_CTX_EXECUTION_DATE='2025-05-13T15:55:35.127136+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='manual__2025-05-13T15:55:35.127136+00:00'
+[2025-05-13T15:55:46.058+0000] {taskinstance.py:731} INFO - ::endgroup::
+[2025-05-13T15:55:46.121+0000] {connection.py:277} WARNING - Connection schemes (type: google_cloud_platform) shall not contain '_' according to RFC3986.
+[2025-05-13T15:55:46.124+0000] {base.py:84} INFO - Retrieving connection 'google_cloud_default'
+[2025-05-13T15:55:47.135+0000] {logging_mixin.py:190} INFO - Found 141 8-K filings
+[2025-05-13T15:55:47.135+0000] {logging_mixin.py:190} INFO - Found 13 10-K filings
+[2025-05-13T15:55:47.136+0000] {logging_mixin.py:190} INFO - Found 37 10-Q filings
+[2025-05-13T15:55:47.136+0000] {logging_mixin.py:190} INFO - Found 191 new filings.
+[2025-05-13T15:55:47.137+0000] {logging_mixin.py:190} INFO - Processing 1 filings...
+[2025-05-13T15:55:47.139+0000] {logging_mixin.py:190} INFO - Processing filing: 0001178670-25-000052
+[2025-05-13T15:55:51.207+0000] {_client.py:1025} INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+[2025-05-13T15:55:51.299+0000] {logging_mixin.py:190} INFO - repsone {
+  "programs": []
+}
+[2025-05-13T15:55:51.917+0000] {logging_mixin.py:190} INFO - Uploaded 10-Q filing to GCS: gs://clinical_data_may25/ALNY/10-Q/2025/ALNY_10-Q_2025-05-01_0001178670-25-000052.txt
+[2025-05-13T15:55:52.449+0000] {logging_mixin.py:190} INFO - Finished processing: 0001178670-25-000052
+[2025-05-13T15:55:52.450+0000] {logging_mixin.py:190} INFO - 594 {'programs': []}
+[2025-05-13T15:55:52.451+0000] {logging_mixin.py:190} INFO - Finished 1/1: 0001178670-25-000052
+[2025-05-13T15:55:52.451+0000] {logging_mixin.py:190} INFO - 609 {'programs': []}
+[2025-05-13T15:55:52.453+0000] {logging_mixin.py:190} INFO - Drug facts collected so far: {'drugs': {}}
+[2025-05-13T15:55:53.310+0000] {_client.py:1025} INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+[2025-05-13T15:55:53.313+0000] {logging_mixin.py:190} INFO - llm_names_grouping {'id': 'chatcmpl-BWmGujdSAqnXwMcHwUrDyiugS6t3A', 'response': '[\n  {\n    "name": "ALN-TTR02",\n    "aliases": [\n      "ALN-TTR02",\n      "patisiran",\n      "Patisiran",\n      "ONPATTRO",\n      "ONPATTRO®",\n      "ONPATTRO™",\n      "patisiran (ALN-TTR02)",\n      "ONPATTRO (patisiran)"\n    ]\n  }\n]', 'model': 'gpt-4.1-nano-2025-04-14', 'prompt_tokens': 621, 'completion_tokens': 91, 'created': '2025-05-13 15:55:52'}
+[2025-05-13T15:55:53.336+0000] {logging_mixin.py:190} INFO - Schema validation passed.
+[2025-05-13T15:55:53.836+0000] {logging_mixin.py:190} INFO - Deleted output_dir: sec_data/ALNY
+[2025-05-13T15:55:53.837+0000] {python.py:240} INFO - Done. Returned value was: None
+[2025-05-13T15:55:53.861+0000] {taskinstance.py:340} INFO - ::group::Post task execution logs
+[2025-05-13T15:55:53.862+0000] {taskinstance.py:352} INFO - Marking task as SUCCESS. dag_id=sec_filing_scheduler, task_id=process_alny, run_id=manual__2025-05-13T15:55:35.127136+00:00, execution_date=20250513T155535, start_date=20250513T155545, end_date=20250513T155553
+[2025-05-13T15:55:53.936+0000] {local_task_job_runner.py:266} INFO - Task exited with return code 0
+[2025-05-13T15:55:54.001+0000] {taskinstance.py:3895} INFO - 0 downstream tasks scheduled from follow-on schedule check
+[2025-05-13T15:55:54.009+0000] {local_task_job_runner.py:245} INFO - ::endgroup::

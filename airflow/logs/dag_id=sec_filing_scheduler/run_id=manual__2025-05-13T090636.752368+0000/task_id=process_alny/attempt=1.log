@@ -1,0 +1,39 @@
+[2025-05-13T09:07:01.504+0000] {local_task_job_runner.py:123} INFO - ::group::Pre task execution logs
+[2025-05-13T09:07:01.545+0000] {taskinstance.py:2613} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: sec_filing_scheduler.process_alny manual__2025-05-13T09:06:36.752368+00:00 [queued]>
+[2025-05-13T09:07:01.578+0000] {taskinstance.py:2613} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: sec_filing_scheduler.process_alny manual__2025-05-13T09:06:36.752368+00:00 [queued]>
+[2025-05-13T09:07:01.579+0000] {taskinstance.py:2866} INFO - Starting attempt 1 of 1
+[2025-05-13T09:07:01.636+0000] {taskinstance.py:2889} INFO - Executing <Task(PythonOperator): process_alny> on 2025-05-13 09:06:36.752368+00:00
+[2025-05-13T09:07:01.834+0000] {warnings.py:112} WARNING - /home/***/.local/lib/python3.12/site-packages/***/task/task_runner/standard_task_runner.py:70: DeprecationWarning: This process (pid=265) is multi-threaded, use of fork() may lead to deadlocks in the child.
+  pid = os.fork()
+
+[2025-05-13T09:07:01.837+0000] {standard_task_runner.py:104} INFO - Running: ['***', 'tasks', 'run', 'sec_filing_scheduler', 'process_alny', 'manual__2025-05-13T09:06:36.752368+00:00', '--job-id', '68', '--raw', '--subdir', 'DAGS_FOLDER/orchestrate_clinical_pipeline.py', '--cfg-path', '/tmp/tmp1213yrpa']
+[2025-05-13T09:07:01.884+0000] {standard_task_runner.py:105} INFO - Job 68: Subtask process_alny
+[2025-05-13T09:07:01.878+0000] {standard_task_runner.py:72} INFO - Started process 267 to run task
+[2025-05-13T09:07:02.870+0000] {task_command.py:467} INFO - Running <TaskInstance: sec_filing_scheduler.process_alny manual__2025-05-13T09:06:36.752368+00:00 [running]> on host e8b101d3d861
+[2025-05-13T09:07:04.457+0000] {taskinstance.py:3132} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='***' AIRFLOW_CTX_DAG_ID='sec_filing_scheduler' AIRFLOW_CTX_TASK_ID='process_alny' AIRFLOW_CTX_EXECUTION_DATE='2025-05-13T09:06:36.752368+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='manual__2025-05-13T09:06:36.752368+00:00'
+[2025-05-13T09:07:04.465+0000] {taskinstance.py:731} INFO - ::endgroup::
+[2025-05-13T09:07:04.547+0000] {connection.py:277} WARNING - Connection schemes (type: google_cloud_platform) shall not contain '_' according to RFC3986.
+[2025-05-13T09:07:04.550+0000] {base.py:84} INFO - Retrieving connection 'google_cloud_default'
+[2025-05-13T09:07:06.840+0000] {logging_mixin.py:190} INFO - Found 141 8-K filings
+[2025-05-13T09:07:06.841+0000] {logging_mixin.py:190} INFO - Found 13 10-K filings
+[2025-05-13T09:07:06.842+0000] {logging_mixin.py:190} INFO - Found 37 10-Q filings
+[2025-05-13T09:07:06.844+0000] {logging_mixin.py:190} INFO - Found 191 new filings.
+[2025-05-13T09:07:06.844+0000] {logging_mixin.py:190} INFO - Processing 1 filings...
+[2025-05-13T09:07:06.927+0000] {logging_mixin.py:190} INFO - Processing filing: 0001178670-25-000052
+[2025-05-13T09:07:09.071+0000] {logging_mixin.py:190} INFO - Finished 1/1: 0001178670-25-000052
+[2025-05-13T09:07:09.073+0000] {logging_mixin.py:190} INFO - Error processing filings: 
+
+You tried to access openai.ChatCompletion, but this is no longer supported in openai>=1.0.0 - see the README at https://github.com/openai/openai-python for the API.
+
+You can run `openai migrate` to automatically upgrade your codebase to use the 1.0.0 interface. 
+
+Alternatively, you can pin your installation to the old version, e.g. `pip install openai==0.28`
+
+A detailed migration guide is available here: https://github.com/openai/openai-python/discussions/742
+[2025-05-13T09:07:09.075+0000] {logging_mixin.py:190} INFO - Deleted output_dir: sec_data/ALNY
+[2025-05-13T09:07:09.076+0000] {python.py:240} INFO - Done. Returned value was: None
+[2025-05-13T09:07:09.090+0000] {taskinstance.py:340} INFO - ::group::Post task execution logs
+[2025-05-13T09:07:09.091+0000] {taskinstance.py:352} INFO - Marking task as SUCCESS. dag_id=sec_filing_scheduler, task_id=process_alny, run_id=manual__2025-05-13T09:06:36.752368+00:00, execution_date=20250513T090636, start_date=20250513T090701, end_date=20250513T090709
+[2025-05-13T09:07:09.142+0000] {local_task_job_runner.py:266} INFO - Task exited with return code 0
+[2025-05-13T09:07:09.161+0000] {taskinstance.py:3895} INFO - 0 downstream tasks scheduled from follow-on schedule check
+[2025-05-13T09:07:09.168+0000] {local_task_job_runner.py:245} INFO - ::endgroup::

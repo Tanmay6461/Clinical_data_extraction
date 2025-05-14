@@ -1,0 +1,26 @@
+[2025-05-13T22:07:57.143+0000] {local_task_job_runner.py:123} INFO - ::group::Pre task execution logs
+[2025-05-13T22:07:57.241+0000] {taskinstance.py:2613} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: sec_filing_scheduler.process_wve manual__2025-05-13T21:39:54.228850+00:00 [queued]>
+[2025-05-13T22:07:57.274+0000] {taskinstance.py:2613} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: sec_filing_scheduler.process_wve manual__2025-05-13T21:39:54.228850+00:00 [queued]>
+[2025-05-13T22:07:57.275+0000] {taskinstance.py:2866} INFO - Starting attempt 1 of 4
+[2025-05-13T22:07:57.324+0000] {taskinstance.py:2889} INFO - Executing <Task(PythonOperator): process_wve> on 2025-05-13 21:39:54.228850+00:00
+[2025-05-13T22:07:57.371+0000] {warnings.py:112} WARNING - /home/***/.local/lib/python3.12/site-packages/***/task/task_runner/standard_task_runner.py:70: DeprecationWarning: This process (pid=4897) is multi-threaded, use of fork() may lead to deadlocks in the child.
+  pid = os.fork()
+
+[2025-05-13T22:07:57.354+0000] {standard_task_runner.py:104} INFO - Running: ['***', 'tasks', 'run', 'sec_filing_scheduler', 'process_wve', 'manual__2025-05-13T21:39:54.228850+00:00', '--job-id', '115', '--raw', '--subdir', 'DAGS_FOLDER/orchestrate_clinical_pipeline.py', '--cfg-path', '/tmp/tmpnjxxxg8j']
+[2025-05-13T22:07:57.376+0000] {standard_task_runner.py:105} INFO - Job 115: Subtask process_wve
+[2025-05-13T22:07:57.377+0000] {standard_task_runner.py:72} INFO - Started process 4905 to run task
+[2025-05-13T22:07:57.867+0000] {task_command.py:467} INFO - Running <TaskInstance: sec_filing_scheduler.process_wve manual__2025-05-13T21:39:54.228850+00:00 [running]> on host c1a7243cf3b7
+[2025-05-13T22:07:58.824+0000] {taskinstance.py:3132} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='***' AIRFLOW_CTX_DAG_ID='sec_filing_scheduler' AIRFLOW_CTX_TASK_ID='process_wve' AIRFLOW_CTX_EXECUTION_DATE='2025-05-13T21:39:54.228850+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='manual__2025-05-13T21:39:54.228850+00:00'
+[2025-05-13T22:07:58.831+0000] {taskinstance.py:731} INFO - ::endgroup::
+[2025-05-13T22:07:59.153+0000] {connection.py:277} WARNING - Connection schemes (type: google_cloud_platform) shall not contain '_' according to RFC3986.
+[2025-05-13T22:07:59.156+0000] {base.py:84} INFO - Retrieving connection 'google_cloud_default'
+[2025-05-13T22:08:00.472+0000] {logging_mixin.py:190} INFO - Found 135 8-K filings
+[2025-05-13T22:08:00.474+0000] {logging_mixin.py:190} INFO - Found 10 10-K filings
+[2025-05-13T22:08:00.475+0000] {logging_mixin.py:190} INFO - Found 29 10-Q filings
+[2025-05-13T22:08:00.476+0000] {logging_mixin.py:190} INFO - No new filings to process.
+[2025-05-13T22:08:00.477+0000] {python.py:240} INFO - Done. Returned value was: None
+[2025-05-13T22:08:00.493+0000] {taskinstance.py:340} INFO - ::group::Post task execution logs
+[2025-05-13T22:08:00.494+0000] {taskinstance.py:352} INFO - Marking task as SUCCESS. dag_id=sec_filing_scheduler, task_id=process_wve, run_id=manual__2025-05-13T21:39:54.228850+00:00, execution_date=20250513T213954, start_date=20250513T220757, end_date=20250513T220800
+[2025-05-13T22:08:00.546+0000] {local_task_job_runner.py:266} INFO - Task exited with return code 0
+[2025-05-13T22:08:00.571+0000] {taskinstance.py:3895} INFO - 0 downstream tasks scheduled from follow-on schedule check
+[2025-05-13T22:08:00.574+0000] {local_task_job_runner.py:245} INFO - ::endgroup::

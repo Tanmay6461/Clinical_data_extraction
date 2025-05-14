@@ -1,0 +1,117 @@
+[2025-05-13T09:50:05.463+0000] {local_task_job_runner.py:123} INFO - ::group::Pre task execution logs
+[2025-05-13T09:50:05.482+0000] {taskinstance.py:2613} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: sec_filing_scheduler.process_alny manual__2025-05-13T09:49:44.880230+00:00 [queued]>
+[2025-05-13T09:50:05.492+0000] {taskinstance.py:2613} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: sec_filing_scheduler.process_alny manual__2025-05-13T09:49:44.880230+00:00 [queued]>
+[2025-05-13T09:50:05.493+0000] {taskinstance.py:2866} INFO - Starting attempt 1 of 1
+[2025-05-13T09:50:05.511+0000] {taskinstance.py:2889} INFO - Executing <Task(PythonOperator): process_alny> on 2025-05-13 09:49:44.880230+00:00
+[2025-05-13T09:50:05.529+0000] {warnings.py:112} WARNING - /home/***/.local/lib/python3.12/site-packages/***/task/task_runner/standard_task_runner.py:70: DeprecationWarning: This process (pid=856) is multi-threaded, use of fork() may lead to deadlocks in the child.
+  pid = os.fork()
+
+[2025-05-13T09:50:05.532+0000] {standard_task_runner.py:72} INFO - Started process 860 to run task
+[2025-05-13T09:50:05.532+0000] {standard_task_runner.py:104} INFO - Running: ['***', 'tasks', 'run', 'sec_filing_scheduler', 'process_alny', 'manual__2025-05-13T09:49:44.880230+00:00', '--job-id', '85', '--raw', '--subdir', 'DAGS_FOLDER/orchestrate_clinical_pipeline.py', '--cfg-path', '/tmp/tmpkbhp9abt']
+[2025-05-13T09:50:05.533+0000] {standard_task_runner.py:105} INFO - Job 85: Subtask process_alny
+[2025-05-13T09:50:05.600+0000] {task_command.py:467} INFO - Running <TaskInstance: sec_filing_scheduler.process_alny manual__2025-05-13T09:49:44.880230+00:00 [running]> on host e8b101d3d861
+[2025-05-13T09:50:05.701+0000] {taskinstance.py:3132} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='***' AIRFLOW_CTX_DAG_ID='sec_filing_scheduler' AIRFLOW_CTX_TASK_ID='process_alny' AIRFLOW_CTX_EXECUTION_DATE='2025-05-13T09:49:44.880230+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='manual__2025-05-13T09:49:44.880230+00:00'
+[2025-05-13T09:50:05.703+0000] {taskinstance.py:731} INFO - ::endgroup::
+[2025-05-13T09:50:05.769+0000] {connection.py:277} WARNING - Connection schemes (type: google_cloud_platform) shall not contain '_' according to RFC3986.
+[2025-05-13T09:50:05.771+0000] {base.py:84} INFO - Retrieving connection 'google_cloud_default'
+[2025-05-13T09:50:06.855+0000] {logging_mixin.py:190} INFO - Found 141 8-K filings
+[2025-05-13T09:50:06.856+0000] {logging_mixin.py:190} INFO - Found 13 10-K filings
+[2025-05-13T09:50:06.856+0000] {logging_mixin.py:190} INFO - Found 37 10-Q filings
+[2025-05-13T09:50:06.857+0000] {logging_mixin.py:190} INFO - Found 191 new filings.
+[2025-05-13T09:50:06.857+0000] {logging_mixin.py:190} INFO - Processing 1 filings...
+[2025-05-13T09:50:06.859+0000] {logging_mixin.py:190} INFO - Processing filing: 0001178670-25-000052
+[2025-05-13T09:50:28.050+0000] {_client.py:1025} INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+[2025-05-13T09:50:28.078+0000] {logging_mixin.py:190} INFO - raw {
+  "programs": [
+    {
+      "name": "AMVUTTRA",
+      "mechanism_of_action": "",
+      "target": "",
+      "indication": "ATTR amyloidosis with cardiomyopathy",
+      "preclinical_data": [],
+      "clinical_trials": [],
+      "upcoming_milestones": [],
+      "references": ["Risk Factors", "10-Q Filing Date: 2025-05-01", "https://www.sec.gov/Archives/edgar/data/1178670/000117867025000052/alny-20250331.htm"],
+      "aliases": []
+    },
+    {
+      "name": "ONPATTRO",
+      "mechanism_of_action": "",
+      "target": "",
+      "indication": "hATTR amyloidosis with polyneuropathy",
+      "preclinical_data": [],
+      "clinical_trials": [],
+      "upcoming_milestones": [],
+      "references": ["Risk Factors", "10-Q Filing Date: 2025-05-01", "https://www.sec.gov/Archives/edgar/data/1178670/000117867025000052/alny-20250331.htm"],
+      "aliases": []
+    },
+    {
+      "name": "GIVLAARI",
+      "mechanism_of_action": "",
+      "target": "",
+      "indication": "",
+      "preclinical_data": [],
+      "clinical_trials": [],
+      "upcoming_milestones": [],
+      "references": ["Risk Factors", "10-Q Filing Date: 2025-05-01", "https://www.sec.gov/Archives/edgar/data/1178670/000117867025000052/alny-20250331.htm"],
+      "aliases": []
+    },
+    {
+      "name": "OXLUMO",
+      "mechanism_of_action": "",
+      "target": "",
+      "indication": "PH1",
+      "preclinical_data": [],
+      "clinical_trials": [],
+      "upcoming_milestones": [],
+      "references": ["Risk Factors", "10-Q Filing Date: 2025-05-01", "https://www.sec.gov/Archives/edgar/data/1178670/000117867025000052/alny-20250331.htm"],
+      "aliases": []
+    },
+    {
+      "name": "nucresiran",
+      "mechanism_of_action": "",
+      "target": "",
+      "indication": "ATTR amyloidosis with cardiomyopathy",
+      "preclinical_data": [],
+      "clinical_trials": [],
+      "upcoming_milestones": [],
+      "references": ["Risk Factors", "10-Q Filing Date: 2025-05-01", "https://www.sec.gov/Archives/edgar/data/1178670/000117867025000052/alny-20250331.htm"],
+      "aliases": ["formerly ALN-TTRsc04"]
+    },
+    {
+      "name": "mivelsiran",
+      "mechanism_of_action": "",
+      "target": "",
+      "indication": "Alzheimer’s Disease",
+      "preclinical_data": [],
+      "clinical_trials": [],
+      "upcoming_milestones": ["Phase 2 development program"],
+      "references": ["Risk Factors", "10-Q Filing Date: 2025-05-01", "https://www.sec.gov/Archives/edgar/data/1178670/000117867025000052/alny-20250331.htm"],
+      "aliases": []
+    },
+    {
+      "name": "zilebesiran",
+      "mechanism_of_action": "",
+      "target": "",
+      "indication": "",
+      "preclinical_data": [],
+      "clinical_trials": [],
+      "upcoming_milestones": ["Phase 3 initiation milestone"],
+      "references": ["Risk Factors", "10-Q Filing Date: 2025-05-01", "https://www.sec.gov/Archives/edgar/data/1178670/000117867025000052/alny-20250331.htm"],
+      "aliases": []
+    }
+  ]
+}
+[2025-05-13T09:50:28.080+0000] {logging_mixin.py:190} INFO - Failed to upload 10-Q filing to GCS: ALNY/10-Q/2025/ALNY_10-Q_2025-05-01_0001178670-25-000052.txt
+[2025-05-13T09:50:28.080+0000] {logging_mixin.py:190} INFO - Finished processing: 0001178670-25-000052
+[2025-05-13T09:50:28.081+0000] {logging_mixin.py:190} INFO - Finished 1/1: 0001178670-25-000052
+[2025-05-13T09:50:28.445+0000] {_client.py:1025} INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+[2025-05-13T09:50:28.496+0000] {logging_mixin.py:190} INFO - llm_names_grouping {'id': 'chatcmpl-BWgZLyu7979eo4BWZeK2unkuu7t6e', 'response': '```json\n[]\n```', 'model': 'gpt-4o-mini-2024-07-18', 'prompt_tokens': 621, 'completion_tokens': 6, 'created': '2025-05-13 09:50:31'}
+[2025-05-13T09:50:28.513+0000] {logging_mixin.py:190} INFO - Schema validation passed.
+[2025-05-13T09:50:28.516+0000] {logging_mixin.py:190} INFO - Deleted output_dir: sec_data/ALNY
+[2025-05-13T09:50:28.517+0000] {python.py:240} INFO - Done. Returned value was: None
+[2025-05-13T09:50:28.529+0000] {taskinstance.py:340} INFO - ::group::Post task execution logs
+[2025-05-13T09:50:28.530+0000] {taskinstance.py:352} INFO - Marking task as SUCCESS. dag_id=sec_filing_scheduler, task_id=process_alny, run_id=manual__2025-05-13T09:49:44.880230+00:00, execution_date=20250513T094944, start_date=20250513T095005, end_date=20250513T095028
+[2025-05-13T09:50:28.605+0000] {local_task_job_runner.py:266} INFO - Task exited with return code 0
+[2025-05-13T09:50:28.622+0000] {taskinstance.py:3895} INFO - 0 downstream tasks scheduled from follow-on schedule check
+[2025-05-13T09:50:28.627+0000] {local_task_job_runner.py:245} INFO - ::endgroup::

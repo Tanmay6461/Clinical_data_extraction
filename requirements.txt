@@ -3,3 +3,10 @@ html2text
 python-dotenv
 google-cloud-storage
 litellm
+"fastapi[standard]"
+fastapi
+apache-airflow
+google-cloud-aiplatform
+google-generativeai
+openai
+

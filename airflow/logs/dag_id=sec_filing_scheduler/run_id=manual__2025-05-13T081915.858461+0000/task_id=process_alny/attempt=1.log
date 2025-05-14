@@ -1,0 +1,34 @@
+[2025-05-13T08:19:50.739+0000] {local_task_job_runner.py:123} INFO - ::group::Pre task execution logs
+[2025-05-13T08:19:50.773+0000] {taskinstance.py:2613} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: sec_filing_scheduler.process_alny manual__2025-05-13T08:19:15.858461+00:00 [queued]>
+[2025-05-13T08:19:50.784+0000] {taskinstance.py:2613} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: sec_filing_scheduler.process_alny manual__2025-05-13T08:19:15.858461+00:00 [queued]>
+[2025-05-13T08:19:50.785+0000] {taskinstance.py:2866} INFO - Starting attempt 1 of 1
+[2025-05-13T08:19:50.814+0000] {taskinstance.py:2889} INFO - Executing <Task(PythonOperator): process_alny> on 2025-05-13 08:19:15.858461+00:00
+[2025-05-13T08:19:50.876+0000] {warnings.py:112} WARNING - /home/***/.local/lib/python3.12/site-packages/***/task/task_runner/standard_task_runner.py:70: DeprecationWarning: This process (pid=302) is multi-threaded, use of fork() may lead to deadlocks in the child.
+  pid = os.fork()
+
+[2025-05-13T08:19:50.879+0000] {standard_task_runner.py:72} INFO - Started process 316 to run task
+[2025-05-13T08:19:50.889+0000] {standard_task_runner.py:104} INFO - Running: ['***', 'tasks', 'run', 'sec_filing_scheduler', 'process_alny', 'manual__2025-05-13T08:19:15.858461+00:00', '--job-id', '56', '--raw', '--subdir', 'DAGS_FOLDER/orchestrate_clinical_pipeline.py', '--cfg-path', '/tmp/tmpwoom3wpc']
+[2025-05-13T08:19:50.892+0000] {standard_task_runner.py:105} INFO - Job 56: Subtask process_alny
+[2025-05-13T08:19:50.986+0000] {task_command.py:467} INFO - Running <TaskInstance: sec_filing_scheduler.process_alny manual__2025-05-13T08:19:15.858461+00:00 [running]> on host 973c7a71adb3
+[2025-05-13T08:19:51.129+0000] {taskinstance.py:3132} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='***' AIRFLOW_CTX_DAG_ID='sec_filing_scheduler' AIRFLOW_CTX_TASK_ID='process_alny' AIRFLOW_CTX_EXECUTION_DATE='2025-05-13T08:19:15.858461+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='manual__2025-05-13T08:19:15.858461+00:00'
+[2025-05-13T08:19:51.132+0000] {taskinstance.py:731} INFO - ::endgroup::
+[2025-05-13T08:19:51.149+0000] {connection.py:277} WARNING - Connection schemes (type: google_cloud_platform) shall not contain '_' according to RFC3986.
+[2025-05-13T08:19:51.152+0000] {base.py:84} INFO - Retrieving connection 'google_cloud_default'
+[2025-05-13T08:19:52.419+0000] {logging_mixin.py:190} INFO - Found 141 8-K filings
+[2025-05-13T08:19:52.420+0000] {logging_mixin.py:190} INFO - Found 13 10-K filings
+[2025-05-13T08:19:52.421+0000] {logging_mixin.py:190} INFO - Found 37 10-Q filings
+[2025-05-13T08:19:52.423+0000] {logging_mixin.py:190} INFO - Found 191 new filings.
+[2025-05-13T08:19:52.425+0000] {logging_mixin.py:190} INFO - Processing 1 filings...
+[2025-05-13T08:19:55.680+0000] {connection.py:277} WARNING - Connection schemes (type: google_cloud_platform) shall not contain '_' according to RFC3986.
+[2025-05-13T08:19:55.684+0000] {base.py:84} INFO - Retrieving connection 'google_cloud_default'
+[2025-05-13T08:19:56.463+0000] {logging_mixin.py:190} INFO - Finished 1/1: 0001178670-25-000052
+[2025-05-13T08:19:56.512+0000] {connection.py:277} WARNING - Connection schemes (type: google_cloud_platform) shall not contain '_' according to RFC3986.
+[2025-05-13T08:19:56.528+0000] {base.py:84} INFO - Retrieving connection 'google_cloud_default'
+[2025-05-13T08:19:57.060+0000] {logging_mixin.py:190} INFO - Error processing filings: 404 Publisher Model `publishers/google/models/gemini-1.5-flash-preview-0409` is not found.
+[2025-05-13T08:19:57.072+0000] {logging_mixin.py:190} INFO - Deleted output_dir: sec_data/ALNY
+[2025-05-13T08:19:57.075+0000] {python.py:240} INFO - Done. Returned value was: None
+[2025-05-13T08:19:57.141+0000] {taskinstance.py:340} INFO - ::group::Post task execution logs
+[2025-05-13T08:19:57.143+0000] {taskinstance.py:352} INFO - Marking task as SUCCESS. dag_id=sec_filing_scheduler, task_id=process_alny, run_id=manual__2025-05-13T08:19:15.858461+00:00, execution_date=20250513T081915, start_date=20250513T081950, end_date=20250513T081957
+[2025-05-13T08:19:57.726+0000] {local_task_job_runner.py:266} INFO - Task exited with return code 0
+[2025-05-13T08:19:57.769+0000] {taskinstance.py:3895} INFO - 0 downstream tasks scheduled from follow-on schedule check
+[2025-05-13T08:19:57.781+0000] {local_task_job_runner.py:245} INFO - ::endgroup::

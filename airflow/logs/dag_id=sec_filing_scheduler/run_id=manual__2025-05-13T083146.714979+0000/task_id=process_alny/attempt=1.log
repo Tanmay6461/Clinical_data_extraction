@@ -1,0 +1,35 @@
+[2025-05-13T08:32:14.645+0000] {local_task_job_runner.py:123} INFO - ::group::Pre task execution logs
+[2025-05-13T08:32:14.682+0000] {taskinstance.py:2613} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: sec_filing_scheduler.process_alny manual__2025-05-13T08:31:46.714979+00:00 [queued]>
+[2025-05-13T08:32:14.704+0000] {taskinstance.py:2613} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: sec_filing_scheduler.process_alny manual__2025-05-13T08:31:46.714979+00:00 [queued]>
+[2025-05-13T08:32:14.713+0000] {taskinstance.py:2866} INFO - Starting attempt 1 of 1
+[2025-05-13T08:32:14.759+0000] {taskinstance.py:2889} INFO - Executing <Task(PythonOperator): process_alny> on 2025-05-13 08:31:46.714979+00:00
+[2025-05-13T08:32:14.824+0000] {warnings.py:112} WARNING - /home/***/.local/lib/python3.12/site-packages/***/task/task_runner/standard_task_runner.py:70: DeprecationWarning: This process (pid=507) is multi-threaded, use of fork() may lead to deadlocks in the child.
+  pid = os.fork()
+
+[2025-05-13T08:32:14.828+0000] {standard_task_runner.py:72} INFO - Started process 516 to run task
+[2025-05-13T08:32:14.894+0000] {standard_task_runner.py:104} INFO - Running: ['***', 'tasks', 'run', 'sec_filing_scheduler', 'process_alny', 'manual__2025-05-13T08:31:46.714979+00:00', '--job-id', '59', '--raw', '--subdir', 'DAGS_FOLDER/orchestrate_clinical_pipeline.py', '--cfg-path', '/tmp/tmpj_kwza7a']
+[2025-05-13T08:32:14.897+0000] {standard_task_runner.py:105} INFO - Job 59: Subtask process_alny
+[2025-05-13T08:32:15.299+0000] {task_command.py:467} INFO - Running <TaskInstance: sec_filing_scheduler.process_alny manual__2025-05-13T08:31:46.714979+00:00 [running]> on host 973c7a71adb3
+[2025-05-13T08:32:15.730+0000] {taskinstance.py:3132} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='***' AIRFLOW_CTX_DAG_ID='sec_filing_scheduler' AIRFLOW_CTX_TASK_ID='process_alny' AIRFLOW_CTX_EXECUTION_DATE='2025-05-13T08:31:46.714979+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='manual__2025-05-13T08:31:46.714979+00:00'
+[2025-05-13T08:32:15.739+0000] {taskinstance.py:731} INFO - ::endgroup::
+[2025-05-13T08:32:15.852+0000] {connection.py:277} WARNING - Connection schemes (type: google_cloud_platform) shall not contain '_' according to RFC3986.
+[2025-05-13T08:32:15.870+0000] {base.py:84} INFO - Retrieving connection 'google_cloud_default'
+[2025-05-13T08:32:17.047+0000] {logging_mixin.py:190} INFO - Found 141 8-K filings
+[2025-05-13T08:32:17.050+0000] {logging_mixin.py:190} INFO - Found 13 10-K filings
+[2025-05-13T08:32:17.051+0000] {logging_mixin.py:190} INFO - Found 37 10-Q filings
+[2025-05-13T08:32:17.058+0000] {logging_mixin.py:190} INFO - Found 191 new filings.
+[2025-05-13T08:32:17.060+0000] {logging_mixin.py:190} INFO - Processing 1 filings...
+[2025-05-13T08:32:17.063+0000] {logging_mixin.py:190} INFO - Processing filing: 0001178670-25-000052
+[2025-05-13T08:32:18.945+0000] {connection.py:277} WARNING - Connection schemes (type: google_cloud_platform) shall not contain '_' according to RFC3986.
+[2025-05-13T08:32:18.948+0000] {base.py:84} INFO - Retrieving connection 'google_cloud_default'
+[2025-05-13T08:32:19.594+0000] {logging_mixin.py:190} INFO - Finished 1/1: 0001178670-25-000052
+[2025-05-13T08:32:19.611+0000] {connection.py:277} WARNING - Connection schemes (type: google_cloud_platform) shall not contain '_' according to RFC3986.
+[2025-05-13T08:32:19.613+0000] {base.py:84} INFO - Retrieving connection 'google_cloud_default'
+[2025-05-13T08:32:20.013+0000] {logging_mixin.py:190} INFO - Error processing filings: Unknown model publishers/google/models/gemini-1.5-flash-preview-0514; {'gs://google-cloud-aiplatform/schema/predict/instance/chat_generation_1.0.0.yaml': <class 'vertexai.language_models.ChatModel'>}
+[2025-05-13T08:32:20.016+0000] {logging_mixin.py:190} INFO - Deleted output_dir: sec_data/ALNY
+[2025-05-13T08:32:20.017+0000] {python.py:240} INFO - Done. Returned value was: None
+[2025-05-13T08:32:20.030+0000] {taskinstance.py:340} INFO - ::group::Post task execution logs
+[2025-05-13T08:32:20.031+0000] {taskinstance.py:352} INFO - Marking task as SUCCESS. dag_id=sec_filing_scheduler, task_id=process_alny, run_id=manual__2025-05-13T08:31:46.714979+00:00, execution_date=20250513T083146, start_date=20250513T083214, end_date=20250513T083220
+[2025-05-13T08:32:20.152+0000] {local_task_job_runner.py:266} INFO - Task exited with return code 0
+[2025-05-13T08:32:20.190+0000] {taskinstance.py:3895} INFO - 0 downstream tasks scheduled from follow-on schedule check
+[2025-05-13T08:32:20.195+0000] {local_task_job_runner.py:245} INFO - ::endgroup::

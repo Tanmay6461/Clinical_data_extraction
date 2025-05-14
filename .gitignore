@@ -8,3 +8,9 @@ clinical-data-keys.json
 .venv
 __pycache__
 ef.py
+t.json
+test.py
+test.ipynb
+test_edgar.py
+sec_data
+drugnames.ipynb
