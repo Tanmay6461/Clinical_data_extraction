@@ -39,15 +39,3 @@ This project automates the extraction, canonicalization, and summarization of dr
 | `group_and_merge_drug_aliases` | Uses LLM to canonicalize drug names and resolve aliases                     |
 | `merge_all_drug_data`        | Merges extracted facts across all alias variants into a unified structure   |
 | `summarize_filing` (FastAPI) | API to trigger summarization; checks cache, extracts if needed, then summarizes |
-
-## ⚙️ Workflow
-
-```mermaid
-graph TD
-A[Download SEC Filing] --> B[Chunk Filing Content]
-B --> C[Extract Drug Programs via LLM]
-C --> D[Merge Aliases via LLM]
-D --> E[Validate + Upload to GCS]
-E --> F[Summarize JSON via LLM]
-F --> G[Expose /summary/{ticker} API]
-
